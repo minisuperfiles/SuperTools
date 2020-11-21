@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Code to json converter</title>
+<style>
+textarea{
+    white-space: pre; 
+    overflow: auto;
+    border: solid #ddd 2px;
+}
+a, button {
+    background-color: #d0d0d0;
+    border: none;
+    color: #5b5b57;
+    padding: 10px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 14px;
+}
+a:hover, button:hover{
+    background-color: #757575;
+    color: #fff;
+}
+</style>
+</head>
+<body>
+<table>
+<tbody>
+    <tr>
+        <td>
+            <textarea autocomplete="off" id="code" cols="80" rows="20" name="code" placeholder="Enter your code..." spellcheck="false"></textarea><br>
+            <button type="button" id="convert" name="convert" value="convert">Convert</button>
+            <button type="button" name="reload" onclick="location.reload()" value="reload">Reload</button>
+        </td>
+        <td>
+            <textarea autocomplete="off" id="result" cols="80" rows="20" name="code" placeholder="Result..." readonly></textarea><br>
+            <button type="button" id="copy" name="copy" value="Copy">Copy</button>
+            <a type="button" id="download" name="download" >Download</a>
+            <span id="status" ></span>
+        </td>
+    </tr>
+</tbody>
+</table>
+<script>
+const converter = document.querySelector('#convert');
+converter.addEventListener("click", function () {
+    var code = document.querySelector('#code'), result = document.querySelector('#result'), data = {};
+    data.code = code.value;
+    result.value = JSON.stringify(data);
+});
+const copy = document.querySelector('#copy');
+copy.addEventListener("click", function() {
+    elm=document.querySelector("#result");
+    elm.select();
+    elm.setSelectionRange(0,99999);
+    document.execCommand('copy');
+});
+const download = document.querySelector('#download');
+download.addEventListener("click", function () {
+    var code = document.querySelector('#code'), data, file;
+    data = { code: code.value };
+    this.download='code.json'; //download
+    file = JSON.stringify(data);
+    var blobData = new Blob([file], {type: 'application/json'});
+    var url = window.URL.createObjectURL(blobData);
+    this.href = url;
+});
+</script>
+</body>
+</html>
