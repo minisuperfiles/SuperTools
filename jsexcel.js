@@ -16,11 +16,12 @@ class Jsexcel {
         this.headStyles = (settings.headStyles) ? settings.headStyles : {};
         //callback
         this.callback = {};
-        if (settings.beforeCellCreation == 'function') {
-            this.callback.beforeCellCreation = settings.beforeCellCreate;
+        if (typeof settings.beforeCellCreation == 'function') {
+            this.callback.beforeCellCreation = settings.beforeCellCreation;
+           
         }
-        if (settings.afterCellCreation == 'function') {
-            this.callback.afterCellCreation = settings.afterCellCreate;
+        if (typeof settings.afterCellCreation == 'function') {
+            this.callback.afterCellCreation = settings.afterCellCreation;
         }
         this.officeColors = ['#c0c0c0', '#ff0000'];
         if (settings.headerProperties) {
@@ -179,7 +180,7 @@ class Jsexcel {
                     rows += '<Row ss:AutoFitHeight="0" ss:Height="12.8126">';
                 }
                 //styles
-                var style = "", styleID = ("ce" + (i + 1)), datatype, properties;
+                var style = "", styleID = ("ce" + (i + 1)), datatype, properties, colspan = "", rowspan = "";
                 if (! this.columns[i].properties) this.columns[i].properties = {};
                 if(this.headerProperties && typeof this.headerProperties[i] !== 'undefined') {
                     properties = this.headerProperties[i];
@@ -194,10 +195,17 @@ class Jsexcel {
                 } else {
                     columns += `<Column ss:Width="64.0063"/>`;
                 }
+                //colspan rowspan
+                if (properties.colspan) {
+                    colspan = `ss:MergeAcross="${(properties.colspan - 1)}"`;
+                }
+                if (properties.rowspan) {
+                    rowspan = `ss:MergeDown="${(properties.rowspan - 1)}"`;
+                }
                 if (this.columns[i].caption) {
-                    rows += `<Cell ss:StyleID="${styleID}"><Data ss:Type="String">${this.columns[i].caption}</Data></Cell>\n`;
+                    rows += `<Cell ss:StyleID="${styleID}" ${rowspan} ${colspan}><Data ss:Type="String">${this.columns[i].caption}</Data></Cell>\n`;
                 } else {
-                    rows += `<Cell ss:StyleID="${styleID}"><Data ss:Type="String"></Data></Cell>\n`;              
+                    rows += `<Cell ss:StyleID="${styleID}" ${rowspan} ${colspan}><Data ss:Type="String"></Data></Cell>\n`;              
                 }
                 if ((this.columns.length - 1) == i) {
                     //end
@@ -210,35 +218,39 @@ class Jsexcel {
             rows += '<Row ss:AutoFitHeight="0" ss:Height="12.8126">\n';
             for (var j = 0; j < this.columns.length; j++) {
                 //styles// ((i + 1) * (j + 1)) //("ce" + (j + 1))
-                var style = "", styleID, value = data[i][this.columns[j].data], datatype = "String";
-                styleID = "ce" + (((i + 1) * this.columns.length) + (j + 1));
-                //datatype
-                if (this.columns[j].properties && this.columns[j].properties.datatype) {
-                    datatype = this.firstLetterCapitalized(this.columns[j].properties.datatype);
-                }
-                if (this.callback.beforeCellCreate) {
-                    var d = { row: i, cell: j, instance: this, value: value, properties: this.columns[j].properties, column: this.columns[j] };
+                var style = "", styleID, value = data[i][this.columns[j].data], datatype = "String", colspan = "", rowspan = "";
+                styleID = "ce" + (((i + 1) * this.columns.length) + (j + 1)), properties = this.columns[j].properties;
+                if (! this.colHead) styleID = "ce" + (((i) * this.columns.length) + (j + 1))
+                if (! properties) properties = {};
+                if (this.callback.beforeCellCreation) {
+                    var d = { row: i, cell: j, instance: this, value: value, properties: properties, column: this.columns[j] };
                     var customData = this.callback.beforeCellCreation(d);
-                    style = this.createStyle(styleID, customData.properties, true);
                     //change new value
                     if (customData.value) {
                         value = customData.value;
                     }
-                    //datatype
-                    if (customData.properties) {
-                        datatype = this.firstLetterCapitalized(this.columns[j].properties.datatype);
-                    }
+                    //change properties
+                    properties = customData.properties;
                 }
-                if (! style) {
-                    style = this.createStyle(styleID, this.columns[j].properties, true);
+                //datatype
+                if (properties.datatype) {
+                    datatype = this.firstLetterCapitalized(properties.datatype);
                 }
+                //style
+                style = this.createStyle(styleID, properties, true);
                 //add style
                 styles += style;
-                //datatype
+                //colspan rowspan
+                if (properties && properties.colspan) {
+                    colspan = `ss:MergeAcross="${(properties.colspan - 1)}"`;
+                }
+                if (properties.rowspan) {
+                    rowspan = `ss:MergeDown="${(properties.rowspan - 1)}"`;
+                }
                 if (value) {
-                    rows += `<Cell ss:StyleID="${styleID}"><Data ss:Type="${datatype}">${value}</Data></Cell>\n`;
+                    rows += `<Cell ss:StyleID="${styleID}" ${rowspan} ${colspan}><Data ss:Type="${datatype}">${value}</Data></Cell>\n`;
                 } else {
-                    rows += `<Cell ss:StyleID="${styleID}"><Data ss:Type="${datatype}"></Data></Cell>\n`;
+                    rows += `<Cell ss:StyleID="${styleID}" ${rowspan} ${colspan}><Data ss:Type="${datatype}"></Data></Cell>\n`;
                 }
             }
             rows += "</Row>\n";
