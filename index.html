@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <script src="jsexcel.js"></script>
+        <title>JS Excel</title>
+    </head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Jagadeesan</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Iron man</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Jaga</td>
+            </tr>
+        </tbody>
+    </table>
+<script>
+var data = [
+    { id: 1, name: "Jagadeesan" },
+    { id: 2, name: "Iron Man" },
+    { id: 3, name: "Jaga" } 
+],
+columns = [ 
+    {data:"id", caption: "ID" },
+    {data:"name", caption: "Name", properties: { fillColor: "#ffff00", textColor: "#f57070", halign: "right" } } 
+]
+const xl = new Jsexcel({
+    headerProperties: [
+        { bold: true, border: 1, halign: "center" }, 
+        { bold: true, border: 1, halign: "center" }, 
+    ],
+    borders : true
+});
+xl.loadData(data, columns, true);
+</script>
+</body>
+</html>
