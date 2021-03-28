@@ -1,3 +1,5 @@
 [
-    { "title": "Code to json converter", "file": "code_to_json.html", "info": "", "search_keywords": "Code to json converter,Coding to json converter", "domain": "html" }
+    { "title": "Code to json converter", "file": "code_to_json.html", "info": "", "search_keywords": "Code to json converter,Coding to json converter", "domain": "html" },
+    { "title": "Base64 encode", "file": "base64_encode.html", "info": "", "search_keywords": "base64 encode", "domain": "html" },
+    { "title": "Base64 decode", "file": "base64_decode.html", "info": "", "search_keywords": "base64 decode", "domain": "html" }
 ]
