@@ -1,0 +1,96 @@
+<div class="supertool">
+    <style>
+    .supertool textarea{
+        white-space: pre; 
+        overflow: auto;
+        border: solid #ddd 2px;
+        width: 100%;
+    }
+    .supertool a, .supertool button {
+        background-color: #d0d0d0;
+        border: none;
+        color: #5b5b57 !important;
+        padding: 10px 8px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        font-size: 14px;
+    }
+    .supertool a:hover, .supertool button:hover{
+        background-color: #757575;
+        color: #fff !important;
+    }
+    </style>
+    <div class="col-md-12">
+        <p><b>Select your JSON file or paste your JSON text</b></p>
+        <input type="file" name="file" id="file" accept="application/JSON" onchange="readFile()">
+        <textarea autocomplete="off" id="string" cols="80" rows="10" name="string" placeholder="Enter your JSON text..." spellcheck="true"></textarea><br>
+        <a type="button" id="download" name="download" >Download (Excel)</a>
+        <button type="button" name="reload" onclick="location.reload()" value="reload">Reload</button>
+    </div>
+    <script>
+    function jsontocsv(data) {
+        var text = "";
+        var head = Object.keys(data[0]);
+        for (var j = 0; j < head.length; j++) {
+            if (j == (head.length - 1)) {
+                text += '"' + head[j] + '"\n';
+            } else {
+                text += '"' + head[j] + '",';
+            }
+        }
+        for (var t = 0; t < data.length; t++) {
+            for (var j = 0; j < head.length; j++) {
+                var value = isNaN(data[t][head[j]]) ? data[t][head[j]].replace(/"/g,'""') : data[t][head[j]];
+                if (j == (head.length - 1)) {
+                    text += '"' + value + '"\n';
+                } else {
+                    text += '"' + value + '",';
+                }
+            }
+        }
+        return text;
+    }
+    const download = document.querySelector('#download');
+    download.addEventListener("click", function (event) {
+        var string = document.querySelector('#string'), data, file, json;
+        if (string.value) {
+            try {
+                json = JSON.parse(string.value);
+                data = jsontocsv(json);
+                this.download = 'excel.csv'; //download
+                file = data;
+                var blobData = new Blob([file], {type: 'text/csv'});
+                var url = window.URL.createObjectURL(blobData);
+                this.href = url;
+            } catch(e) {
+                console.log(e);
+                alert("Something problem check your json");
+                event.preventDefault();
+            }
+        } else {
+            alert("Pleace enter the JSON data");
+            string.focus();
+            event.preventDefault();
+        }
+    });
+    function readFile() {
+        var storager = document.querySelector('#string');
+        var file = document.querySelector('#file').files[0];
+        var reader = new FileReader();
+        reader.addEventListener("load", function () {
+            storager.value = reader.result;
+        }, false);
+        if (file) {
+            reader.readAsText(file);
+        }
+    }
+    const superTools = {
+        title: "JSON to Excel converter"
+    };
+    </script>
+    </div>
+    

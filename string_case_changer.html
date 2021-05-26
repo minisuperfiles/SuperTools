@@ -25,12 +25,16 @@
 }
 </style>
 <div class="col-md-12">
-    <textarea autocomplete="off" id="code" cols="80" rows="10" name="code" placeholder="Enter plan text..." spellcheck="false"></textarea><br>
-    <button type="button" id="convert" name="convert" value="convert">Encode</button>
+    <div>
+    <label><input type="radio" name="case" value="U" checked> Upper Case</label>
+    <label><input type="radio" name="case" value="L"> Lower Case</label>
+    </div>
+    <textarea autocomplete="off" id="string" cols="80" rows="10" name="string" placeholder="Enter your text..." spellcheck="true"></textarea><br>
+    <button type="button" id="convert" name="convert" value="convert">Convert</button>
     <button type="button" name="reload" onclick="location.reload()" value="reload">Reload</button>
 </div>
 <div class="col-md-12">
-    <textarea autocomplete="off" id="result" cols="80" rows="10" name="result" placeholder="Result..." readonly></textarea><br>
+    <textarea autocomplete="off" id="result" cols="80" rows="10" name="code" placeholder="Result..." readonly></textarea><br>
     <button type="button" id="copy" name="copy" value="Copy">Copy</button>
     <a type="button" id="download" name="download" >Download</a>
     <span id="status" ></span>
@@ -38,27 +42,40 @@
 <script>
 const converter = document.querySelector('#convert');
 converter.addEventListener("click", function () {
-    var code = document.querySelector('#code'), result = document.querySelector('#result');
-    result.value = btoa(code.value);
+    var stringCase = document.querySelector("input[name=case]:checked");
+    var string = document.querySelector('#string'), result = document.querySelector('#result'), data;
+    if (stringCase.value == 'L') {
+        data = string.value.toLowerCase();
+    } else {
+        data = string.value.toUpperCase()
+    }
+    result.value = data;
 });
 const copy = document.querySelector('#copy');
 copy.addEventListener("click", function() {
-    elm = document.querySelector("#result");
+    elm=document.querySelector("#result");
     elm.select();
     elm.setSelectionRange(0,99999);
     document.execCommand('copy');
 });
 const download = document.querySelector('#download');
 download.addEventListener("click", function () {
-    var code = document.querySelector('#code'), file;
-    this.download='encode_text.txt'; //download
-    file = btoa(code.value);
+    var stringCase = document.querySelector("input[name=case]:checked");
+    var string = document.querySelector('#string'), data, file;
+    if (stringCase.value == 'L') {
+        data = string.value.toLowerCase();
+        this.download='lowercase_text.txt'; //download
+    } else {
+        this.download='uppercase_text.txt'; //download
+        data = string.value.toUpperCase()
+    }
+    file = data;
     var blobData = new Blob([file], {type: 'text/plain'});
     var url = window.URL.createObjectURL(blobData);
     this.href = url;
 });
 const superTools = {
-    title: "Base64 Encode"
+    title: "Upper Case and Lower Case converter"
 };
 </script>
 </div>

@@ -1,5 +1,7 @@
 [
-    { "title": "Code to json converter", "file": "code_to_json.html", "info": "", "search_keywords": "Code to json converter,Coding to json converter", "domain": "html" },
+    { "title": "Code to JSON converter", "file": "code_to_json.html", "info": "", "search_keywords": "Code to JSON converter,Coding to JSON converter", "domain": "html" },
     { "title": "Base64 encode", "file": "base64_encode.html", "info": "", "search_keywords": "base64 encode", "domain": "html" },
-    { "title": "Base64 decode", "file": "base64_decode.html", "info": "", "search_keywords": "base64 decode", "domain": "html" }
+    { "title": "Base64 decode", "file": "base64_decode.html", "info": "", "search_keywords": "base64 decode", "domain": "html" },
+    { "title": "Upper Case and Lower Case converter", "file": "string_case_changer.html", "info": "", "search_keywords": "Upper Case and Lower Case converter", "domain": "html" },
+    { "title": "JSON to Excel converter", "file": "JSON_to_excel.html", "info": "", "search_keywords": "JSON to Excel converter", "domain": "html" }
 ]
