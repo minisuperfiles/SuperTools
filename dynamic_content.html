@@ -1,0 +1,131 @@
+<div class="supertool">
+    <style>
+    .supertool textarea{
+        white-space: pre; 
+        overflow: auto;
+        border: solid #ddd 2px;
+        width: 100%;
+    }
+    .supertool a, .supertool button {
+        background-color: #d0d0d0;
+        border: none;
+        color: #5b5b57 !important;
+        padding: 10px 8px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        font-size: 14px;
+    }
+    .supertool a:hover, .supertool button:hover{
+        background-color: #757575;
+        color: #fff !important;
+    }
+    </style>
+    <div class="col-md-12">
+        <p><b>Select your JSON file or paste your JSON text</b></p>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="file" name="file" id="file" accept="application/JSON" onchange="readFile()">
+                <textarea autocomplete="off" id="string" cols="80" rows="10" name="string" placeholder="Paste your JSON array text..." spellcheck="true"></textarea><br>
+            </div>
+            <div class="col-md-6">
+                <textarea autocomplete="off" id="string2" cols="80" rows="10" name="string2" placeholder="Enter your templete text..." spellcheck="true"></textarea><br>
+            </div>
+        </div>
+        <label><input type="checkbox" id="newline" checked>New line</label><br>
+        <p style="font-size: small;color: gray;">Special keys: {({__Index__})}, {({__SerialIndex__})} and {({__Key__})}</p>
+        <button type="button" id="convert" name="convert" value="convert">Convert</button>
+        <button type="button" id="loadSample" name="loadSample" value="loadSample">Load Sample Data</button>
+        <button type="button" name="reload" onclick="location.reload()" value="reload">Reload</button>
+    </div>
+    <div class="col-md-12">
+        <textarea autocomplete="off" id="result" cols="80" rows="10" name="code" placeholder="Result..." readonly></textarea><br>
+        <button type="button" id="copy" name="copy" value="Copy">Copy</button>
+        <a type="button" id="download" name="download" >Download</a>
+        <span id="status" ></span>
+    </div>
+<script>
+function DynamicTextCreator(data, templete, indexNewline = true) {
+    let dynamicText = "";
+    for (let i = 0; i < data.length; i++) {
+        let keys = Object.keys(data[i]), indexTemplete = templete;
+        //index replace
+        indexTemplete = indexTemplete.replaceAll(`{({__Index__})}`, i);
+        indexTemplete = indexTemplete.replaceAll(`{({__SerialIndex__})}`, (i + 1));
+        for (let j = 0; j < keys.length; j++) {
+            //key replace
+            indexTemplete = indexTemplete.replaceAll(`{({__Key__})}`, keys[j]);
+            //value replace
+            indexTemplete = indexTemplete.replaceAll(`{({${keys[j]}})}`, data[i][keys[j]]);
+        }
+        if (indexNewline) {
+            dynamicText += indexTemplete + "\n";
+        } else {
+            dynamicText += indexTemplete;
+        }
+    }
+    return dynamicText;
+}
+const converter = document.querySelector('#convert');
+converter.addEventListener("click", function () {
+    var json = document.querySelector('#string'),temp = document.querySelector('#string2'), 
+    result = document.querySelector('#result'), newline = document.querySelector('#newline'), d;
+    //console.log(json.value, temp.value, newline.checked);
+    try {
+        d = JSON.parse(json.value);
+        console.log(d, temp.value);
+        result.value = DynamicTextCreator(d, temp.value, newline.checked);
+    } catch(e) {
+        console.log(e);
+        alert("Your json was problem");
+    }
+});
+const copy = document.querySelector('#copy');
+copy.addEventListener("click", function() {
+    elm=document.querySelector("#result");
+    elm.select();
+    elm.setSelectionRange(0,99999);
+    document.execCommand('copy');
+});
+const download = document.querySelector('#download');
+download.addEventListener("click", function () {
+    var code = document.querySelector('#result'), data, file;
+    data = code.value;
+    this.download='dynamic-text.txt'; //download
+    file = data;
+    var blobData = new Blob([file], {type: 'text/plain'});
+    var url = window.URL.createObjectURL(blobData);
+    this.href = url;
+});
+function readFile() {
+    var storager = document.querySelector('#string');
+    var file = document.querySelector('#file').files[0];
+    var reader = new FileReader();
+    reader.addEventListener("load", function () {
+        storager.value = reader.result;
+    }, false);
+    if (file) {
+        reader.readAsText(file);
+    }
+}
+const loadSample = document.querySelector("#loadSample");
+    loadSample.addEventListener("click", function(){
+    var json = document.querySelector('#string'),
+    temp = document.querySelector('#string2');
+    temp.value = 
+`{({__SerialIndex__})}) {({program})} programming is the process of designing and building an executable computer program to accomplish a specific computing result or to perform a specific task.
+{({program})} developed by {({developed})}.`;
+    json.value=`[
+    { "program": "Java", "developed": "Sun Microsystems" },
+    { "program": "JavaScript", "developed": "Brendan Eich" }
+]`;
+});
+const superTools = {
+    title: "Create Dynamic Content"
+};
+</script>
+</div>
+    

@@ -3,5 +3,6 @@
     { "title": "Base64 encode", "file": "base64_encode.html", "info": "", "search_keywords": "base64 encode", "domain": "html" },
     { "title": "Base64 decode", "file": "base64_decode.html", "info": "", "search_keywords": "base64 decode", "domain": "html" },
     { "title": "Upper Case and Lower Case converter", "file": "string_case_changer.html", "info": "", "search_keywords": "Upper Case and Lower Case converter", "domain": "html" },
-    { "title": "JSON to Excel converter", "file": "json_to_excel.html", "info": "", "search_keywords": "JSON to Excel converter", "domain": "html" }
+    { "title": "JSON to Excel converter", "file": "json_to_excel.html", "info": "", "search_keywords": "JSON to Excel converter", "domain": "html" },
+    { "title": "Create Dynamic Content", "file": "dynamic_content.html", "info": "", "search_keywords": "Create Dynamic Content,JSON to Dynamic Text", "domain": "html" }
 ]
