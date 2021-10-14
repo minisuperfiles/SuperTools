@@ -30,14 +30,15 @@
             <div class="col-md-12">
                 <input type="file" name="file" id="file" accept="application/JSON" onchange="readFile()">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <textarea autocomplete="off" id="string" cols="80" rows="10" name="string" placeholder="Paste your JSON array text..." spellcheck="true"></textarea><br>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <textarea autocomplete="off" id="string2" cols="80" rows="10" name="string2" placeholder="Enter your templete text..." spellcheck="true"></textarea><br>
             </div>
         </div>
-        <label><input type="checkbox" id="newline" checked>New line</label><br>
+        <label><input type="checkbox" id="newline" checked>New line</label>
+        <label><input type="checkbox" id="spellcheck" checked>spellcheck</label><br>
         <p style="font-size: small;color: gray;">Special keys: {({__Index__})}, {({__SerialIndex__})} and {({__Key__})}</p>
         <button type="button" id="convert" name="convert" value="convert">Convert</button>
         <button type="button" id="loadSample" name="loadSample" value="loadSample">Load Sample Data</button>
@@ -78,7 +79,7 @@ converter.addEventListener("click", function () {
     //console.log(json.value, temp.value, newline.checked);
     try {
         d = JSON.parse(json.value);
-        console.log(d, temp.value);
+        //console.log(d, temp.value);
         result.value = DynamicTextCreator(d, temp.value, newline.checked);
     } catch(e) {
         console.log(e);
@@ -124,6 +125,13 @@ const loadSample = document.querySelector("#loadSample");
     { "program": "Java", "developed": "Sun Microsystems" },
     { "program": "JavaScript", "developed": "Brendan Eich" }
 ]`;
+});  
+const spellcheck = document.querySelector("#spellcheck");
+spellcheck.addEventListener("click", function(){
+    var json = document.querySelector('#string'),
+    temp = document.querySelector('#string2');
+    json.spellcheck = this.checked;
+    temp.spellcheck = this.checked;
 });
 const superTools = {
     title: "Create Dynamic Content"
